@@ -7,11 +7,37 @@ const vscode = require('vscode');
 
 const lexicon = require('./lexicon');
 
+function generateMessage(key) {
+	const alternatives = lexicon[key];
+
+	// These words should be removed completely.
+	if (!alternatives.length) {
+		return "This word can be removed."
+	}
+
+	// if (alternatives.length === 1) {
+	// 	return `Instead of **${key}**, consider using **${alternatives[0]}**.`
+	// }
+
+	// if (alternatives.length === 2) {
+	// 	return `Instead of **${key}**, consider using **${alternatives[0]}** or **${alternatives[1]}**.`
+	// }
+
+	return `Instead of **${key}**, consider using ${alternatives.reduce((alternative, acc, index, source) => {
+		if (index < source.length - 1) {
+			return `${alternative}, ${acc}`;
+		}
+		return `${alternative}${source.length > 2 ? "," : ""} or ${acc}.`
+		// if (index === source.length - 1) {
+		// 	return `${acc} or **${alternative}**`;
+		// }
+		// return `${acc}, **${alternative}**`;
+	})}`;
+}
+
 function findWords(document, editor) {
 	const content = document.getText();
 	const words = Object.keys(lexicon);
-	// const matches = [];
-	// const regexp = /\b("guys")\\b/gi;
 	const decorations = [];
 	words.forEach((word) => {
 		let regexp = new RegExp("\\b(" + word + ")\\b", "gi");
@@ -22,7 +48,7 @@ function findWords(document, editor) {
 		console.log(matches);
 		for (const match of matches) {
 			console.log(match.index);
-			const decoration = { range: new vscode.Range(document.positionAt(match.index), document.positionAt(match.index + match[0].length)), hoverMessage: 'Number **' + match[0] + '**' };
+			const decoration = { range: new vscode.Range(document.positionAt(match.index), document.positionAt(match.index + match[0].length)), hoverMessage: generateMessage(match[0]) };
 			decorations.push(decoration);
 		}
 	})
