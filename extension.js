@@ -5,6 +5,19 @@ const vscode = require('vscode');
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 
+const lexicon = require('./lexicon');
+
+function findWords(content) {
+	console.log(content);
+	const words = Object.keys(lexicon);
+	words.forEach((word) => {
+		const regexp = new RegExp("\\b(" + word + ")\\b", "gi");
+		if (!!content.match(regexp)) {
+			console.log(`found: ${word}`);
+		}
+	})
+}
+
 /**
  * @param {vscode.ExtensionContext} context
  */
@@ -21,14 +34,39 @@ function activate(context) {
 		// The code you place here will be executed every time your command is executed
 
 		// Display a message box to the user
-		vscode.window.showInformationMessage('foo from jira-hero!');
+		// vscode.window.showInformationMessage('foo from jira-hero!');
+
+		const editor = vscode.window.activeTextEditor;
+
+		if (!editor) {
+			return;
+		}
+
+		const document = editor.document;
+		findWords(document.getText())
 	});
 
-	context.subscriptions.push(disposable);
+	// context.subscriptions.push(disposable);
 
-	vscode.window.onDidChangeActiveTerminal((terminal) => {
-		console.log(terminal);
-	});
+	// const gitExtension = vscode.extensions.getExtension('vscode.git').exports;
+	// const git = gitExtension.getAPI(1);
+	// console.log(git);
+
+	// context.subscriptions.push(git.onDidChangeOriginalResource(() => {
+	// 	console.log('a')
+	// }));
+
+	// context.subscriptions.push(vscode.window.onDidChangeActiveTerminal((terminal) => {
+	// 	console.log(terminal);
+	// }));
+
+	// vscode.scm.
+
+	// context.subscriptions.push(vscode.commands.registerCommand("extension.source-control.checkout", () => console.log('checkout')));
+
+	// context.subscriptions.push(vscode.commands.registerCommand("extension.source-control.open", () => {
+	// 	console.log('open');
+	// }));
 }
 exports.activate = activate;
 
