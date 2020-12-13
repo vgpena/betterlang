@@ -7,15 +7,50 @@ const vscode = require('vscode');
 
 const lexicon = require('./lexicon');
 
-function findWords(content) {
-	console.log(content);
+function findWords(document, editor) {
+	const content = document.getText();
 	const words = Object.keys(lexicon);
+	// const matches = [];
+	// const regexp = /\b("guys")\\b/gi;
+	const decorations = [];
 	words.forEach((word) => {
-		const regexp = new RegExp("\\b(" + word + ")\\b", "gi");
-		if (!!content.match(regexp)) {
-			console.log(`found: ${word}`);
+		let regexp = new RegExp("\\b(" + word + ")\\b", "gi");
+		const matches = content.matchAll(regexp);
+		if (!matches) {
+			return;
+		}
+		console.log(matches);
+		for (const match of matches) {
+			console.log(match.index);
+			const decoration = { range: new vscode.Range(document.positionAt(match.index), document.positionAt(match.index + match[0].length)), hoverMessage: 'Number **' + match[0] + '**' };
+			decorations.push(decoration);
 		}
 	})
+	// if(!!content.match(regexp)) {
+		// let split = content.split(regexp);
+		// for(let j = 0, k = split.length; j + 1 < k; j+=2) {
+		//   found.push( split[j].substr(-30) + chalk.underline(split[j+1]) + split[j+2].substr(0, 30));
+		// }
+	// }
+	// let match;
+	// words.forEach((word) => {
+	// while (match = regexp.exec(content)) {
+	// 	console.log('a match');
+	// 	const start = document.positionAt(match.index);
+	// 	const end = document.positionAt(match.index + match[0].length);
+	// 	const decoration = { range: new vscode.Range(start, end), hoverMessage: 'Number **' + match[0] + '**' };
+	// 	finds.push(decoration);
+	// }
+	editor.setDecorations(vscode.window.createTextEditorDecorationType({
+		cursor: 'crosshair',
+		backgroundColor: '#00acab'
+	}), decorations)
+	// if (!!content.match(regexp)) {
+		// console.log(`found: ${word}`);
+		
+		// finds.push()
+	// }
+	// })
 }
 
 /**
@@ -43,7 +78,7 @@ function activate(context) {
 		}
 
 		const document = editor.document;
-		findWords(document.getText())
+		findWords(document, editor)
 	});
 
 	// context.subscriptions.push(disposable);
