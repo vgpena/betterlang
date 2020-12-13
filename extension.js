@@ -25,6 +25,10 @@ function activate(context) {
 	});
 
 	context.subscriptions.push(disposable);
+
+	vscode.window.onDidChangeActiveTerminal((terminal) => {
+		console.log(terminal);
+	});
 }
 exports.activate = activate;
 

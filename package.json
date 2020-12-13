@@ -10,7 +10,7 @@
 		"Other"
 	],
 	"activationEvents": [
-        "onCommand:jira-hero.helloWorld"
+        "onStartupFinished"
 	],
 	"main": "./extension.js",
 	"contributes": {
@@ -32,7 +32,6 @@
 		"commands": [{
             "command": "jira-hero.helloWorld",
             "title": "Hello World"
-
 		}]
 	},
 	"scripts": {
