@@ -14,6 +14,21 @@
 	],
 	"main": "./extension.js",
 	"contributes": {
+		"viewsContainers": {
+			"activitybar": [{
+				"id": "jira",
+				"title": "Jira",
+				"icon": "logo.svg"
+			}]
+		},
+		"views": {
+			"jira": [
+				{
+					"id": "issue",
+					"name": "Issue"
+				}
+			]
+		},
 		"commands": [{
             "command": "jira-hero.helloWorld",
             "title": "Hello World"
