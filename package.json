@@ -1,7 +1,7 @@
 {
   "name": "jira-hero",
 	"displayName": "jira-hero",
-	"description": "Show Jira issues alongside code.",
+	"description": "Suggest more inclusive words and phrases in Markdown files.",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.52.0"
@@ -13,23 +13,6 @@
 		"onLanguage:markdown"
 	],
 	"main": "./extension.js",
-	"contributes": {
-		"viewsContainers": {
-			"activitybar": [{
-				"id": "jira",
-				"title": "Jira",
-				"icon": "logo.svg"
-			}]
-		},
-		"views": {
-			"jira": [
-				{
-					"id": "issue",
-					"name": "Issue"
-				}
-			]
-		}
-	},
 	"scripts": {
 		"lint": "eslint .",
 		"pretest": "yarn run lint",
