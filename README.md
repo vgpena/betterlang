@@ -1,65 +1,29 @@
 # BetterLang VSCode Extension
 
-This is the README for your extension "betterlang". After writing up a brief description, we recommend including the following sections.
+This extension highlights exclusionary language in Markdown (.md) files and suggests alternative wording.
 
-## Features
+## The Idea
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+Documentation may be read by a wide variety of people and often persists after the writer has left the project or organization. When writer(s) are alerted to exclusive or toxic language at time of writing, they will be able to craft docs that support a larger community for a longer time.
 
-For example if there is an image subfolder under your extension project workspace:
+## Actions
 
-\!\[feature X\]\(images/feature-x.png\)
+When BetterLang finds problematic language in an open file, it will prompt you to _substitute_ that phrase for a better one or to _delete_ it completely.
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+## Current Limitations
 
-## Requirements
+- English only
+- Markdown only
+- Operates on strings, not on grammatial units. (e.g., "whitelist" -> "allowlist" will not change the article from "a" to "an").
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+## Future Features
 
-## Extension Settings
+- Custom lexicons and/or on-the-fly lexicon customization
+- Other (natural) languages
+- Other (programming) languages
+- Work on grammar level, not string level
+- Maybe pull lexicon from [Self-Defined](https://www.selfdefined.app/)?
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+## Inspired by
 
-For example:
-
-This extension contributes the following settings:
-
-- `myExtension.enable`: enable/disable this extension
-- `myExtension.thing`: set to `blah` to do something
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-- Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-- Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-- Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-- [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-- [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+- [Eleventy Inclusive Language](https://github.com/11ty/eleventy-plugin-inclusive-language/tree/8d9a0920523b7887ebdd3cca06fc328140772a1b)
