@@ -59,7 +59,6 @@ function activate(context) {
 	// 	// The code you place here will be executed every time your command is executed
 
 	let disposable = vscode.commands.registerCommand("jira-hero.foo", (e) => {
-		const a = "b";	
 		console.log(e)
 	});
 
@@ -92,10 +91,11 @@ function activate(context) {
 	context.subscriptions.push(vscode.languages.registerHoverProvider('markdown', {
 		provideHover(document, position, token) {
             const range = document.getWordRangeAtPosition(position);
-            const word = document.getText(range);
+			const word = document.getText(range);
+			// const num = document.get
 
             if (word === "this") {
-				const command = vscode.Uri.parse(`command:jira-hero.foo?${encodeURIComponent(JSON.stringify([{bar: "baz"}]))}`)
+				const command = vscode.Uri.parse(`command:jira-hero.foo?${encodeURIComponent(JSON.stringify([{position: document.offsetAt(position)}]))}`)
 				const marky = new vscode.MarkdownString(`[clicky](${command})`);
 				marky.isTrusted = true;
 				return new vscode.Hover(marky);
