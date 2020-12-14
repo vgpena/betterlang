@@ -12,7 +12,7 @@ const foundRanges = [];
 
 function generateMessage(matchWord, range) {
 	if (!lexicon[matchWord].length) {
-		const removeCommand = vscode.Uri.parse(`command:jira-hero.remove?${encodeURIComponent(JSON.stringify([{range: range}]))}`);
+		const removeCommand = vscode.Uri.parse(`command:betterlang.remove?${encodeURIComponent(JSON.stringify([{range: range}]))}`);
 		const removeMarkup = new vscode.MarkdownString(`This word can be removed. [Remove?](${removeCommand})`);
 		removeMarkup.isTrusted = true;
 		return removeMarkup;
@@ -20,7 +20,7 @@ function generateMessage(matchWord, range) {
 
 	const preamble = `Instead of **${matchWord}**, consider using:`;
 	const replacementsList = lexicon[matchWord].reduce((acc, curr) => {
-		const currReplaceCommand= vscode.Uri.parse(`command:jira-hero.foo?${encodeURIComponent(JSON.stringify([{replacement: curr, range: range}]))}`);
+		const currReplaceCommand= vscode.Uri.parse(`command:betterlang.foo?${encodeURIComponent(JSON.stringify([{replacement: curr, range: range}]))}`);
 		return `${acc}\n- [${curr}](${currReplaceCommand})`;
 	}, "")
 	const marky = new vscode.MarkdownString(`${preamble}${replacementsList}`);
@@ -59,7 +59,7 @@ function makeRealRange(rangeJSON, removeSpace) {
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
-	let disposable = vscode.commands.registerCommand("jira-hero.foo", (e) => {
+	let disposable = vscode.commands.registerCommand("betterlang.foo", (e) => {
 		const editor = vscode.window.activeTextEditor;
 		if (!editor) {
 			return;
@@ -72,7 +72,7 @@ function activate(context) {
 
 	});
 
-	let removeDisposable = vscode.commands.registerCommand("jira-hero.remove", (range) => {
+	let removeDisposable = vscode.commands.registerCommand("betterlang.remove", (range) => {
 		const realRange = makeRealRange(range.range, true);
 		const editor = vscode.window.activeTextEditor;
 		if (!editor) {

@@ -1,6 +1,6 @@
 {
-  "name": "jira-hero",
-	"displayName": "jira-hero",
+  "name": "betterlang",
+	"displayName": "betterlang",
 	"description": "Suggest more inclusive words and phrases in Markdown files.",
 	"version": "0.0.1",
 	"engines": {
