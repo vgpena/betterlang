@@ -28,7 +28,11 @@
 					"name": "Issue"
 				}
 			]
-		}
+		},
+		"commands": [{
+            "command": "jira-hero.foo",
+            "title": "Foo"
+		}]
 	},
 	"scripts": {
 		"lint": "eslint .",

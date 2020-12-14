@@ -58,6 +58,10 @@ function activate(context) {
 	// let disposable = vscode.commands.registerCommand('jira-hero.helloWorld', function () {
 	// 	// The code you place here will be executed every time your command is executed
 
+	let disposable = vscode.commands.registerCommand("jira-hero.foo", () => {
+		console.log('a')
+	});
+
 	// 	// Display a message box to the user
 	// 	// vscode.window.showInformationMessage('foo from jira-hero!');
 
@@ -82,19 +86,22 @@ function activate(context) {
 		findWords(document, editor)
 	}));
 
+	const marky = new vscode.MarkdownString("foo");
+	marky.isTrusted = true;
+	marky.appendMarkdown(" [clicky](command:jira-hero.foo)")
+
 	context.subscriptions.push(vscode.languages.registerHoverProvider('markdown', {
 		provideHover(document, position, token) {
             const range = document.getWordRangeAtPosition(position);
             const word = document.getText(range);
 
             if (word === "this") {
-
-                return new vscode.Hover(["[foo](https://google.com)", "- bar\n- fizz\n- buzz", "[baz](https://example.com)"]);
+				return new vscode.Hover(marky);
             }
         }
 	}))
 
-	// context.subscriptions.push(disposable);
+	context.subscriptions.push(disposable);
 
 	// const gitExtension = vscode.extensions.getExtension('vscode.git').exports;
 	// const git = gitExtension.getAPI(1);
