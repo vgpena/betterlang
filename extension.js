@@ -34,7 +34,7 @@ function generateMessage(matchWord, range) {
 
 	const preamble = `Instead of **${matchWord}**, consider substituting one of the following:`;
 	const replacementsList = lexicon[matchWord].reduce((acc, curr) => {
-		const currReplaceCommand= vscode.Uri.parse(`command:jira-hero.foo?${encodeURIComponent(JSON.stringify([{replacement: curr}]))}`);
+		const currReplaceCommand= vscode.Uri.parse(`command:jira-hero.foo?${encodeURIComponent(JSON.stringify([{replacement: curr, range: range}]))}`);
 		return `${acc}\n- [${curr}](${currReplaceCommand})`;
 	}, "")
 
@@ -97,13 +97,22 @@ function activate(context) {
 	// 	// The code you place here will be executed every time your command is executed
 
 	let disposable = vscode.commands.registerCommand("jira-hero.foo", (e) => {
-		console.log(e)
 		// foundRanges.forEach((foundRange) => {
 		// 	if (!foundRange.intersection(position)) {
 		// 		return;
 		// 	}
 		// 	console.log(foundRange);
 		// })
+		const editor = vscode.window.activeTextEditor;
+		if (!editor) {
+			return;
+		}
+
+		const realRange = makeRealRange(e.range);
+		editor.edit((editBuilder) => {
+			editBuilder.replace(realRange, e.replacement);
+		});
+
 	});
 
 	let removeDisposable = vscode.commands.registerCommand("jira-hero.remove", (range) => {
