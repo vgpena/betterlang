@@ -32,8 +32,18 @@ function generateMessage(matchWord, range) {
 		return removeMarkup;
 	}
 
-	return "foo";
+	const preamble = `Instead of **${matchWord}**, consider substituting one of the following:`;
+	const replacementsList = lexicon[matchWord].reduce((acc, curr) => {
+		const currReplaceCommand= vscode.Uri.parse(`command:jira-hero.foo?${encodeURIComponent(JSON.stringify([{replacement: curr}]))}`);
+		return `${acc}\n- [${curr}](${currReplaceCommand})`;
+	}, "")
 
+	// const replaceCommand = vscode.Uri.parse(`command:jira-hero.remove?${encodeURIComponent(JSON.stringify([{range: range}]))}`);
+	// const removeMarkup = new vscode.MarkdownString(`This word can be removed. [Remove?](${removeCommand})`);
+	// removeMarkup.isTrusted = true;
+	const marky = new vscode.MarkdownString(`${preamble}${replacementsList}`);
+	marky.isTrusted = true;
+	return marky;
 
 	// THIS NEXT BIT WORKS
 	// const command = vscode.Uri.parse(`command:jira-hero.foo?${encodeURIComponent(JSON.stringify([{match: match[0]}]))}`)
