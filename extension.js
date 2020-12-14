@@ -82,6 +82,18 @@ function activate(context) {
 		findWords(document, editor)
 	}));
 
+	context.subscriptions.push(vscode.languages.registerHoverProvider('markdown', {
+		provideHover(document, position, token) {
+            const range = document.getWordRangeAtPosition(position);
+            const word = document.getText(range);
+
+            if (word === "this") {
+
+                return new vscode.Hover(["[foo](https://google.com)", "- bar\n- fizz\n- buzz", "[baz](https://example.com)"]);
+            }
+        }
+	}))
+
 	// context.subscriptions.push(disposable);
 
 	// const gitExtension = vscode.extensions.getExtension('vscode.git').exports;
