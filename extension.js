@@ -3,6 +3,11 @@
 const vscode = require('vscode');
 const lexicon = require('./lexicon');
 
+const decorationType = vscode.window.createTextEditorDecorationType({
+	cursor: 'crosshair',
+	backgroundColor: '#00acab'
+});
+
 function generateMessage(key) {
 	const alternatives = lexicon[key];
 
@@ -34,10 +39,7 @@ function findWords(document, editor) {
 			decorations.push(decoration);
 		}
 	})
-	editor.setDecorations(vscode.window.createTextEditorDecorationType({
-		cursor: 'crosshair',
-		backgroundColor: '#00acab'
-	}), decorations)
+	editor.setDecorations(decorationType, decorations)
 }
 
 /**
