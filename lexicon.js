@@ -10,7 +10,9 @@ const lexicon = {
     "simply": [],
     "obviously": [],
     "blacklist": ["denylist", "blocklist"],
-    "whitelist": ["allowlist"]
+    "whitelist": ["allowlist"],
+    "crazy": ["super", "incredibly", "exceptionally"],
+    "insane": ["super", "incredibly", "exceptionally"]
 }
 
 module.exports = lexicon;

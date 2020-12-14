@@ -1,10 +1,6 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
-
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
-
 const lexicon = require('./lexicon');
 
 function generateMessage(key) {
@@ -15,23 +11,11 @@ function generateMessage(key) {
 		return "This word can be removed."
 	}
 
-	// if (alternatives.length === 1) {
-	// 	return `Instead of **${key}**, consider using **${alternatives[0]}**.`
-	// }
-
-	// if (alternatives.length === 2) {
-	// 	return `Instead of **${key}**, consider using **${alternatives[0]}** or **${alternatives[1]}**.`
-	// }
-
 	return `Instead of **${key}**, consider using ${alternatives.reduce((alternative, acc, index, source) => {
 		if (index < source.length - 1) {
 			return `${alternative}, ${acc}`;
 		}
 		return `${alternative}${source.length > 2 ? "," : ""} or ${acc}.`
-		// if (index === source.length - 1) {
-		// 	return `${acc} or **${alternative}**`;
-		// }
-		// return `${acc}, **${alternative}**`;
 	})}`;
 }
 
@@ -45,38 +29,15 @@ function findWords(document, editor) {
 		if (!matches) {
 			return;
 		}
-		console.log(matches);
 		for (const match of matches) {
-			console.log(match.index);
 			const decoration = { range: new vscode.Range(document.positionAt(match.index), document.positionAt(match.index + match[0].length)), hoverMessage: generateMessage(match[0]) };
 			decorations.push(decoration);
 		}
 	})
-	// if(!!content.match(regexp)) {
-		// let split = content.split(regexp);
-		// for(let j = 0, k = split.length; j + 1 < k; j+=2) {
-		//   found.push( split[j].substr(-30) + chalk.underline(split[j+1]) + split[j+2].substr(0, 30));
-		// }
-	// }
-	// let match;
-	// words.forEach((word) => {
-	// while (match = regexp.exec(content)) {
-	// 	console.log('a match');
-	// 	const start = document.positionAt(match.index);
-	// 	const end = document.positionAt(match.index + match[0].length);
-	// 	const decoration = { range: new vscode.Range(start, end), hoverMessage: 'Number **' + match[0] + '**' };
-	// 	finds.push(decoration);
-	// }
 	editor.setDecorations(vscode.window.createTextEditorDecorationType({
 		cursor: 'crosshair',
 		backgroundColor: '#00acab'
 	}), decorations)
-	// if (!!content.match(regexp)) {
-		// console.log(`found: ${word}`);
-		
-		// finds.push()
-	// }
-	// })
 }
 
 /**
