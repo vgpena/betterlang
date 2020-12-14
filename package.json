@@ -28,11 +28,7 @@
 					"name": "Issue"
 				}
 			]
-		},
-		"commands": [{
-            "command": "jira-hero.helloWorld",
-            "title": "Hello World"
-		}]
+		}
 	},
 	"scripts": {
 		"lint": "eslint .",
