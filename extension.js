@@ -64,6 +64,13 @@ function findWords(document, editor) {
 	editor.setDecorations(decorationType, decorations)
 }
 
+function makeRealRange(rangeJSON, removeSpace) {
+	const val = removeSpace ? 1 : 0;
+	const start = new vscode.Position(rangeJSON[0].line, rangeJSON[0].character - val);
+	const end = new vscode.Position(rangeJSON[1].line, rangeJSON[1].character);
+	return new vscode.Range(start, end);
+}
+
 /**
  * @param {vscode.ExtensionContext} context
  */
@@ -90,11 +97,7 @@ function activate(context) {
 	});
 
 	let removeDisposable = vscode.commands.registerCommand("jira-hero.remove", (range) => {
-		// console.log(range);
-		const start = new vscode.Position(range.range[0].line, range.range[0].character - 1);
-		const end = new vscode.Position(range.range[1].line, range.range[1].character);
-		const realRange = new vscode.Range(start, end);
-		console.log(realRange);
+
 		// const r = new vscode.Range
 		// const deletion = new vscode.TextEdit()
 		// vscode.TextEdit.delete(range);
@@ -106,7 +109,7 @@ function activate(context) {
 		// editor.edit((editBuilder) => {
 		// 	editBuilder.repl
 		// })
-
+		const realRange = makeRealRange(range.range, true);
 		const editor = vscode.window.activeTextEditor;
 		if (!editor) {
 			return;
