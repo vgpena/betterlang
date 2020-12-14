@@ -8,26 +8,44 @@ const decorationType = vscode.window.createTextEditorDecorationType({
 	backgroundColor: '#00acab'
 });
 
-function generateMessage(key) {
-	const alternatives = lexicon[key];
+const foundRanges = [];
 
-	// These words should be removed completely.
-	if (!alternatives.length) {
-		return "This word can be removed."
+function generateMessage(matchWord, range) {
+	// const alternatives = lexicon[key];
+
+	// // These words should be removed completely.
+	// if (!alternatives.length) {
+	// 	return "This word can be removed."
+	// }
+
+	// return `Instead of **${key}**, consider using ${alternatives.reduce((alternative, acc, index, source) => {
+	// 	if (index < source.length - 1) {
+	// 		return `${alternative}, ${acc}`;
+	// 	}
+	// 	return `${alternative}${source.length > 2 ? "," : ""} or ${acc}.`
+	// })}`;
+
+	if (!lexicon[matchWord].length) {
+		const removeCommand = vscode.Uri.parse(`command:jira-hero.remove?${encodeURIComponent(JSON.stringify([{range: range}]))}`);
+		const removeMarkup = new vscode.MarkdownString(`This word can be removed. [Remove?](${removeCommand})`);
+		removeMarkup.isTrusted = true;
+		return removeMarkup;
 	}
 
-	return `Instead of **${key}**, consider using ${alternatives.reduce((alternative, acc, index, source) => {
-		if (index < source.length - 1) {
-			return `${alternative}, ${acc}`;
-		}
-		return `${alternative}${source.length > 2 ? "," : ""} or ${acc}.`
-	})}`;
+	return "foo";
+
+
+	// THIS NEXT BIT WORKS
+	// const command = vscode.Uri.parse(`command:jira-hero.foo?${encodeURIComponent(JSON.stringify([{match: match[0]}]))}`)
+	// const marky = new vscode.MarkdownString(`[clicky](${command})`);
+	// marky.isTrusted = true;
 }
 
 function findWords(document, editor) {
 	const content = document.getText();
 	const words = Object.keys(lexicon);
 	const decorations = [];
+	// foundRanges.length = 0;
 	words.forEach((word) => {
 		let regexp = new RegExp("\\b(" + word + ")\\b", "gi");
 		const matches = content.matchAll(regexp);
@@ -35,7 +53,10 @@ function findWords(document, editor) {
 			return;
 		}
 		for (const match of matches) {
-			const decoration = { range: new vscode.Range(document.positionAt(match.index), document.positionAt(match.index + match[0].length)), hoverMessage: generateMessage(match[0]) };
+			const range = new vscode.Range(document.positionAt(match.index), document.positionAt(match.index + match[0].length));
+			const marky = generateMessage(match[0], range);
+			const decoration = { range: range, hoverMessage: marky};
+			// foundRanges.push(range);
 			decorations.push(decoration);
 			// vscode.window.showQuickPick(lexicon[match[0]]);
 		}
@@ -60,6 +81,16 @@ function activate(context) {
 
 	let disposable = vscode.commands.registerCommand("jira-hero.foo", (e) => {
 		console.log(e)
+		// foundRanges.forEach((foundRange) => {
+		// 	if (!foundRange.intersection(position)) {
+		// 		return;
+		// 	}
+		// 	console.log(foundRange);
+		// })
+	});
+
+	let removeDisposable = vscode.commands.registerCommand("jira-hero.remove", (range) => {
+		console.log(range);
 	});
 
 	// 	// Display a message box to the user
@@ -86,24 +117,45 @@ function activate(context) {
 		findWords(document, editor)
 	}));
 
+	context.subscriptions.push(vscode.workspace.onDidOpenTextDocument(() => {
+		const editor = vscode.window.activeTextEditor;
+
+		if (!editor) {
+			return;
+		}
+
+		const document = editor.document;
+		findWords(document, editor)
+	}));
+
 	
 
-	context.subscriptions.push(vscode.languages.registerHoverProvider('markdown', {
-		provideHover(document, position, token) {
-            const range = document.getWordRangeAtPosition(position);
-			const word = document.getText(range);
-			// const num = document.get
+	// context.subscriptions.push(vscode.languages.registerHoverProvider('markdown', {
+	// 	provideHover(document, position, token) {
+	// 		// if (!foundRanges) {
+	// 		// 	return;
+	// 		// }
+	// 		// foundRanges.forEach((foundRange) => {
+	// 		// 	if (!foundRange.contains(position)) {
+	// 		// 		return;
+	// 		// 	}
+	// 		// 	const command = vscode.Uri.parse(`command:jira-hero.foo?${encodeURIComponent(JSON.stringify([{position: position}]))}`)
+	// 		// 	const marky = new vscode.MarkdownString(`[clicky](${command})`);
+	// 		// 	marky.isTrusted = true;
+	// 		// 	return new vscode.Hover(marky);
+	// 		// })
+    //         // const range = document.getWordRangeAtPosition(position);
+	// 		// const word = document.getText(range);
+	// 		// const num = document.get
 
-            if (word === "this") {
-				const command = vscode.Uri.parse(`command:jira-hero.foo?${encodeURIComponent(JSON.stringify([{position: document.offsetAt(position)}]))}`)
-				const marky = new vscode.MarkdownString(`[clicky](${command})`);
-				marky.isTrusted = true;
-				return new vscode.Hover(marky);
-            }
-        }
-	}))
+    //         // if (word === "this") {
+				
+    //         // }
+    //     }
+	// }))
 
 	context.subscriptions.push(disposable);
+	context.subscriptions.push(removeDisposable);
 
 	// const gitExtension = vscode.extensions.getExtension('vscode.git').exports;
 	// const git = gitExtension.getAPI(1);
