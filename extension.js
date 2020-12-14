@@ -58,8 +58,9 @@ function activate(context) {
 	// let disposable = vscode.commands.registerCommand('jira-hero.helloWorld', function () {
 	// 	// The code you place here will be executed every time your command is executed
 
-	let disposable = vscode.commands.registerCommand("jira-hero.foo", () => {
-		console.log('a')
+	let disposable = vscode.commands.registerCommand("jira-hero.foo", (e) => {
+		const a = "b";	
+		console.log(e)
 	});
 
 	// 	// Display a message box to the user
@@ -86,9 +87,7 @@ function activate(context) {
 		findWords(document, editor)
 	}));
 
-	const marky = new vscode.MarkdownString("foo");
-	marky.isTrusted = true;
-	marky.appendMarkdown(" [clicky](command:jira-hero.foo)")
+	
 
 	context.subscriptions.push(vscode.languages.registerHoverProvider('markdown', {
 		provideHover(document, position, token) {
@@ -96,6 +95,9 @@ function activate(context) {
             const word = document.getText(range);
 
             if (word === "this") {
+				const command = vscode.Uri.parse(`command:jira-hero.foo?${encodeURIComponent(JSON.stringify([{bar: "baz"}]))}`)
+				const marky = new vscode.MarkdownString(`[clicky](${command})`);
+				marky.isTrusted = true;
 				return new vscode.Hover(marky);
             }
         }
