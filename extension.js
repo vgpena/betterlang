@@ -90,7 +90,30 @@ function activate(context) {
 	});
 
 	let removeDisposable = vscode.commands.registerCommand("jira-hero.remove", (range) => {
-		console.log(range);
+		// console.log(range);
+		const start = new vscode.Position(range.range[0].line, range.range[0].character - 1);
+		const end = new vscode.Position(range.range[1].line, range.range[1].character);
+		const realRange = new vscode.Range(start, end);
+		console.log(realRange);
+		// const r = new vscode.Range
+		// const deletion = new vscode.TextEdit()
+		// vscode.TextEdit.delete(range);
+		// const editor = vscode.window.activeTextEditor;
+		// if (!editor) {
+		// 	return;
+		// }
+		// editor
+		// editor.edit((editBuilder) => {
+		// 	editBuilder.repl
+		// })
+
+		const editor = vscode.window.activeTextEditor;
+		if (!editor) {
+			return;
+		}
+		editor.edit((editBuilder) => {
+			editBuilder.delete(realRange);
+		});
 	});
 
 	// 	// Display a message box to the user
